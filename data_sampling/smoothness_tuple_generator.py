@@ -29,8 +29,8 @@ def create_stack_diff(vid):
         rf = cv2.resize(f, (const.nominal_width, const.nominal_height))
         frames.append(rf)
 
-    stacked_diff_0 = np.stack(frames[:,len(frames)/2], 3)
-    stacked_diff_1 = np.stack(frames[len(frames)/2:], 3)
+    stacked_diff_0 = np.stack(frames[:len(frames)//2], 3)
+    stacked_diff_1 = np.stack(frames[len(frames)//2:], 3)
 
     stacked_diff = [stacked_diff_0, stacked_diff_1]
 
@@ -78,7 +78,8 @@ def save_tuple(vid, center_frame_idx, stack_diff_frame_idz, save_dir, tuple_idx,
                 # plt.axis('off')
                 # plt.savefig(save_dir + '/frame_' + '%07d' % (tuple_idx) +'_'+ str(i)+'_pkl.jpg')
         queue.put(True)
-    except:
+    except Exception as e:
+        print(e)
         pass
         queue.put(False)
         queue.put(tuple_idx)
