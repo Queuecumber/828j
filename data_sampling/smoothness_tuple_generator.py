@@ -1,7 +1,6 @@
 import sys
 
 sys.path.append('../')
-import data_sampling.motion_aware as motion_aware
 import utils
 import os
 import cv2
@@ -13,10 +12,10 @@ import multiprocessing as mp
 import traceback
 
 
-def create_stack_diff(vid, stack_diff_frame_idz):
-    unique_els = np.unique(stack_diff_frame_idz)
-    if (unique_els.shape != stack_diff_frame_idz.shape):
-        print("Something is wrong")
+def create_stack_diff(vid):
+    # unique_els = np.unique(stack_diff_frame_idz)
+    # if (unique_els.shape != stack_diff_frame_idz.shape):
+    #     print("Something is wrong")
 
     n_frames = 12
     total_frames = vid._meta['nframes']
@@ -67,7 +66,7 @@ def save_tuple(vid, center_frame_idx, stack_diff_frame_idz, save_dir, tuple_idx,
         #   center_img = cv2.resize(center_img, (const.nominal_height, const.nominal_width))
 
         #imageio.imwrite(save_dir + '/frame' + "%07d" % (tuple_idx) + '.jpg', center_img);
-        stack_diff = create_stack_diff(vid, stack_diff_frame_idz)
+        stack_diff = create_stack_diff(vid)
         utils.pkl_write(save_dir + '/frame' + "%07d" % (tuple_idx) + '.pkl', stack_diff)
 
         visualize = False
@@ -162,7 +161,7 @@ if __name__ == '__main__':
         pkl_file = os.path.join(pkls_path, activity, name) + '.pkl'
         flow_mag = utils.pkl_read(pkl_file)
 
-        center_frame_idx, stack_diff_frame_idz = motion_aware.sample_high_motion_frames(vid, flow_mag, vdx_path)
+        center_frame_idx, stack_diff_frame_idz = 0,[] #motion_aware.sample_high_motion_frames(vid, flow_mag, vdx_path)
         if (center_frame_idx is not None):
 
             # save_tuple(vid, center_frame_idx, stack_diff_frame_idz, save_dir, tuple_idx, lbls_ary, activity_lbl)
