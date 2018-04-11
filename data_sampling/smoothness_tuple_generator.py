@@ -32,6 +32,9 @@ def create_stack_diff(vid):
     stacked_diff_0 = np.stack(frames[:len(frames)//2], 3)
     stacked_diff_1 = np.stack(frames[len(frames)//2:], 3)
 
+    print(stacked_diff_0.shape)
+    print(stacked_diff_1.shape)
+
     stacked_diff = [stacked_diff_0, stacked_diff_1]
 
     return stacked_diff

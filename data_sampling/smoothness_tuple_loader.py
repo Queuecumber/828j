@@ -22,10 +22,17 @@ class TupleLoader:
         self._tuples_path = utils.dataset_tuples(utils.get_dataset_path(file_const.dataset_name))
 
         train_tuple_path = os.path.join(self._tuples_path, 'train')
+        print('trainig path :::',train_tuple_path)
         val_tuple_path = os.path.join(self._tuples_path, 'val')
+        print('val path ::::',val_tuple_path)
         self.train_lbls_ary = utils.pkl_read(os.path.join(train_tuple_path, 'lbl.pkl'))
         self._num_training = self.train_lbls_ary.shape[0]
+        
+        # self.val_lbls_ary = utils.pkl_read(os.path.join(train_tuple_path, 'lbl.pkl'))
+        
+
         self.val_lbls_ary = utils.pkl_read(os.path.join(val_tuple_path, 'lbl.pkl'))
+        
         self._num_val = self.val_lbls_ary.shape[0]
         print('Num Training ', self._num_training, ' Num Validation', self._num_val)
 
@@ -55,9 +62,14 @@ class TupleLoader:
 
         pkl_all = utils.pkl_read(self._tuples_path + '/' + subset + '/frame' + '%07d' % (index) + '.pkl')
 
+        # print('Length :::::',len(pkl_all))
         stacked_diff_all = []
-        for i in len(pkl_all):
-            pkl = pkl_all[i]
+        tmp_var = len(pkl_all) 
+        # tmp_var = [2]
+        # print('TMP Var:::',tmp_var)
+        # for i in len(pkl_all):
+        for i in range(tmp_var):
+            pkl = pkl_all[i] 
             rand_crop = np.random.rand()
             y = int(rand_crop * (pkl.shape[0] - const.frame_height))
             x = int(rand_crop * (pkl.shape[1] - const.frame_width))
@@ -154,7 +166,8 @@ class TupleLoader:
                     contexts[batch_idx, 1, :, :] = c_1
 
             else:
-
+# new label format                
+#10, 4 -> batch_size, label, [0 1 0 0]
                 labels[batch_idx] = -1;
                 if (class_lbls[pos_tuple[batch_idx]] != -1):
                     # words[batch_idx, :, :] = self.img_at_index(pos_tuple[batch_idx], subset_name, batch_idx=batch_idx,
@@ -276,20 +289,22 @@ def save_pkls(prefix, context, lbls, suffix):
 def save_imgs(prefix, imgs, lbls, suffix):
     for i in range(imgs.shape[0]):
         cv2.imwrite(file_const.dump_path + prefix + str(i) + '_' + str(lbls[i]) + suffix + '.png',
-                    np.reshape(imgs[i], (const.frame_height, const.frame_width, const.frame_channels)))
+                    np.reshape(imgs[i, 0, : , :, :3], (const.frame_height, const.frame_width, 3)))
 
 
 if __name__ == '__main__':
     args = dict()
     args[data_args.gen_nearby_frame] = False;
     args[data_args.data_augmentation_enabled] = False
-
+    print("ags val:::",args)
     vdz_dataset = TupleLoader(args);
     import time
 
     start_time = time.time()
-    words, contexts, lbls = vdz_dataset.next(const.Subset.VAL, fix_label=-1, supervised=False)
+    words, lbls = vdz_dataset.next(const.Subset.VAL, fix_label=-1, supervised=False)
     elapsed_time = time.time() - start_time
+    print(words.shape)
+    print(lbls)
     print('elapsed_time :', elapsed_time)
     ## Some visualization for debugging purpose
     # save_imgs('tuple_',words,lbls,'_img');
