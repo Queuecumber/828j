@@ -27,20 +27,16 @@
 
 \begin{document}
 	
-	\title{Title}
+	\title{Video Retrieval Using Self-Supervised Deep Representations}
 	
-	\author{Max Ehrlich%
-	\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem{Max Ehrlich is with the University of Maryland Institute for Advanced Computer Studies and can be contacted at \href{mailto:maxehr@umiacs.umd.edu}{maxehr@umiacs.umd.edu}  }}}
+	\author{Max Ehrlich, Peng Zhao, Xiawu Sun, Bhargavi Patel}
 	
-	\markboth{Left}{Right}
+	\markboth{CS828J}{University of Maryland}
 	
 	\IEEEtitleabstractindextext{%
 		\begin{abstract}
-			
+			 In the video retrieval problem, we seek to find, in an automated way, videos that have similar semantic or visual properties. Traditional techniques project videos into a high dimensional space using feature extraction and finding nearest-neighbors in the feature space. Recent work has focused on using deep neural-networks to learn the feature space, which requires a large dataset of labeled data. We propose a novel method for generating video retrieval representations based on self-supversied deep networks. Our method combines two self-supervised representations, Odd-One-Out (O3N), and Temporal Smoothness, which allows the network to learn without labeled data. We show that combining the O3N loss and the Temporal Smoothness loss leads to increased accuracy over using the O3N loss alone.
 		\end{abstract}
-		\begin{IEEEkeywords}
-			
-		\end{IEEEkeywords}
 	}
 	
 	\maketitle
@@ -49,9 +45,13 @@
 	
 	\IEEEpeerreviewmaketitle
 	
-	\IEEEraisesectionheading{\section{First Section}\label{sec:first}}
-	
-	\IEEEPARstart{F}{irst} 
+	\input{sections/introduction}
+    
+    \input{sections/relatedwork}
+    
+    \input{sections/network}
+    
+    \input{sections/results}
 	
 	
 	{\small
