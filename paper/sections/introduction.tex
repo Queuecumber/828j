@@ -1,3 +1,35 @@
 \IEEEraisesectionheading{\section{Introduction}\label{sec:intro}}
 	
-\IEEEPARstart{F}{irst} 
+\IEEEPARstart{T}{he} goal of the video retrieval problem is to locate videos in a database satisfying a given set of criteria. This is a well studied problem in the field of visual information retrieval (TODO CITATIONS). In general, there are two major criteria that are used to locate videos: visual similarity and semantic similarity. Formally, given a set of videos $V = \{v_0, ..., v_N\}$ and a probe video $p$, the visual similarity criterion seeks to return a sequence $S_v$ of elements from $V$ such that, given some visual similarity function $\sigma_{\text{visual}}(x, y)$
+
+\begin{equation*}
+    S_v = (v_i, v_k, ..., v_j)
+\end{equation*}
+such that 
+
+\begin{equation*}
+\sigma_{\text{visual}}(p, v_i) > \sigma_{\text{visual}}(p, v_k) > ... > \sigma_{\text{visual}}(p, v_j)
+\end{equation*}
+The principal task being to develop $\sigma_{\text{visual}}(x, y)$ such that the majority of human observers agree on the sequence $S_v$. For example, this kind of retrieval system might find all pictures with blue backgrounds, or all videos with high motion blur, depending on the probe $p$. 
+
+The semantic similarity criterion can be phrased in two distinct ways. The first, similar to the visual similarity criterion, given $V$, $p$, and a semantic similarity function $\sigma_{\text{semantic}}(x, y)$, the sequence $S_s$ is generated such that $\sigma_{\text{semantic}}(p, v_i) > ... > \sigma_{\text{semantic}}(p, v_j)$. Again the goal here is to agree with human observers. An alternative, and interesting, formulation of the semantic criterion is to associate a set of text labels with the videos in $V$. Then instead of a probe video $p$, a set of probe labels of arbitrary cardinality is provided and videos containing those text labels are returned as in traditional database management systems. The task now is how to analyze the videos in $V$ and produce the text labels, or, how to match videos given text labels not seen before akin to zero-shot learning. While this provides a general overview of the type of tasks usually associated with the video retrieval problem, we focus on the cases where a probe video is given.
+
+Using the expressive power of deep neural-networks, which have revolutionized the field of computer vision since their resurgence on 2012, we propose a novel similarity function that can learn, in a self-supervised way, similarity \textit{both} visually and in semantics. Our network combines two loss functions, the Odd-One-Out loss and the Temporal Smoothness loss (TODO cite these). Additionally, we redesign the network architecture to take advantage of these loss functions. Videos are then projected into the \textit{embedding space} defined by the network, and we define the similarity measure of two videos as 
+
+\begin{equation*}
+\sigma(x, y) =|f(x) - f(y)|_2
+\end{equation*}
+where $f(x)$ uses the learned network to project videos into the embedding space and $|\cdot|_2$ denotes the $l_2$ norm. 
+
+Since the space defined by our network is high dimensional, we additionally test a well studied optimization to the search problem, locality sensitive hashing (LSH). LSH defines a hash function $H(x)$ such that, in general, the relative distance between points in space is preserved after hashing. Formally, given three points in some space $x_0, x_1, x_2$ such that 
+
+\begin{equation*}
+|x_0 - x_1|_2 > |x_0 - x_2|_2
+\end{equation*}
+then
+
+\begin{equation*}
+|H(x_0) - H(x_1)|_2 > |H(x_0) - H(x_2)|_2
+\end{equation*}
+
+We choose the Random Projections algorithm for our hash function. The Random Projections algorithm takes $N$ random hyperplanes in the space of the original points and encodes with a single bit, the side of the hyperplane a given point resides on. This results in an $N$ bit signature for each point. Points can then be compared using the Hamming distance, which can be computed quickly. We are free to vary the number of bits with a corresponding change in the accuracy of the result.
