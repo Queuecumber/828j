@@ -15,6 +15,7 @@ import matplotlib
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from random import randint
 
 
 class TupleLoader:
@@ -35,6 +36,8 @@ class TupleLoader:
         
         self._num_val = self.val_lbls_ary.shape[0]
         print('Num Training ', self._num_training, ' Num Validation', self._num_val)
+
+        print('training lables:',self.train_lbls_ary)
 
         self._gen_nearby_frame = args[data_args.gen_nearby_frame]
         self._data_augmentation_enabled = args[data_args.data_augmentation_enabled]
@@ -68,6 +71,8 @@ class TupleLoader:
         # tmp_var = [2]
         # print('TMP Var:::',tmp_var)
         # for i in len(pkl_all):
+        print('New tuple')
+        randomnum = randint(0,1)
         for i in range(tmp_var):
             pkl = pkl_all[i] 
             rand_crop = np.random.rand()
@@ -76,7 +81,9 @@ class TupleLoader:
 
             rand_rgb_channel = np.random.choice(3);
             stack_diff = np.zeros((const.frame_height, const.frame_width, const.context_channels))
-            if ordered or i == 1:
+            
+            
+            if ordered or i == randomnum:
                 frames_order = np.arange(const.context_channels + 1)
             else:
                 frames_order = np.random.permutation(const.context_channels + 1)
@@ -89,6 +96,8 @@ class TupleLoader:
                 stack_diff[:, :, j] = current_frame.astype(np.int32) - next_frame.astype(np.int32);
 
             stacked_diff_all.append(stack_diff)
+            print("Current index:",i, "suffled index", 1 - randomnum)
+            print("frames_order",frames_order)
 
         # if(verbose):
         #     prefix = 'tuple_'
@@ -107,7 +116,7 @@ class TupleLoader:
         #     if(ordered == False):
         #         self.pkl_at_index(index,subset,ordered=True,batch_idx=batch_idx,lbl=lbl,verbose=True);
 
-        return stacked_diff_all
+        return stacked_diff_all, 1- randomnum
 
     def unsupervised_next(self, subset, fix_label=None):
         subset_name = ''
@@ -125,6 +134,10 @@ class TupleLoader:
         elif (subset == const.Subset.TEST):
             img_set = self._test_activities
 
+
+        print("Batch Size::::",const.batch_size)
+        print("Unsupervised lables::::",class_lbls)
+
         pos_tuple = np.random.randint(low=0, high=subset_size, size=(const.batch_size));
         neg_tuple = np.random.randint(low=0, high=subset_size, size=(const.batch_size));
 
@@ -133,7 +146,8 @@ class TupleLoader:
         if self._gen_nearby_frame:
             nearby = np.zeros((const.batch_size, const.frame_height, const.frame_width, const.frame_channels))
 
-        labels = np.zeros((const.batch_size), dtype=np.int32)
+        labels = np.zeros((const.batch_size,2), dtype=np.int32)
+        
         postive_ratio = 1 / ratio;
         if (fix_label == None):
             sampling_ratio = np.random.rand(const.batch_size);
@@ -150,7 +164,7 @@ class TupleLoader:
             if (sampling_ratio[batch_idx] < postive_ratio):
 
                 pos_count += 1
-                labels[batch_idx] = 1;
+                # labels[batch_idx] = 0;
                 if (class_lbls[pos_tuple[batch_idx]] != -1):
                     # words[batch_idx, :, :] = self.img_at_index(pos_tuple[batch_idx], subset_name, batch_idx=batch_idx,
                     #                                            lbl=1, verbose=verbose_in_dump)
@@ -158,26 +172,33 @@ class TupleLoader:
                                       batch_idx=batch_idx, lbl=1, verbose=verbose_in_dump)
                     contexts[batch_idx, 0, :, :] = c_0
                     contexts[batch_idx, 1, :, :] = c_1
+                    labels[batch_idx, 0] = 0
+                    labels[batch_idx, 0] = 0
                 else:
                     print("Something wrong with tuple", pos_tuple[batch_idx], file=sys.stderr)
                     #words[batch_idx, :, :] = self.img_at_index(0, subset_name)
                     c_0, c_1 = self.pkl_at_index(0, subset_name)
                     contexts[batch_idx, 0, :, :] = c_0
                     contexts[batch_idx, 1, :, :] = c_1
+                    labels[batch_idx, 0] = 0
+                    labels[batch_idx, 0] = 0
 
             else:
 # new label format                
 #10, 4 -> batch_size, label, [0 1 0 0]
-                labels[batch_idx] = -1;
+                # labels[batch_idx] = 1;
                 if (class_lbls[pos_tuple[batch_idx]] != -1):
                     # words[batch_idx, :, :] = self.img_at_index(pos_tuple[batch_idx], subset_name, batch_idx=batch_idx,
                     #                                            lbl=0, verbose=verbose_in_dump)
                     if ((sampling_ratio[batch_idx] - postive_ratio) / (1 - postive_ratio) <= 1):
-                        c_0, c_1 = self.pkl_at_index(pos_tuple[batch_idx], subset_name, ordered=False,
+                        [c_0, c_1], l = self.pkl_at_index(pos_tuple[batch_idx], subset_name, ordered=False,
                                                                       batch_idx=batch_idx, lbl=0,
                                                                       verbose=verbose_in_dump)
                         contexts[batch_idx, 0, :, :] = c_0
                         contexts[batch_idx, 1, :, :] = c_1
+                        labels[batch_idx, l] = 1
+                        print("Testing ones:::::::")
+                        #labels[batch_idx, 1] = 0
                         order_neg_count += 1
                     else:
                         c_0, c_1 = self.pkl_at_index(neg_tuple[batch_idx], subset_name,
@@ -186,24 +207,30 @@ class TupleLoader:
 
                         contexts[batch_idx, 0, :, :] = c_0
                         contexts[batch_idx, 1, :, :] = c_1
+                        labels[batch_idx, 0] = 0
+                        labels[batch_idx, 0] = 0
                         neg_count += 1
                 else:
                     print("Something wrong with tuple", pos_tuple[batch_idx], file=sys.stderr)
                     #words[batch_idx, :, :] = self.img_at_index(0, subset_name)
-                    c_0, c_1 = self.pkl_at_index(0, subset_name, ordered=False)
+                    [c_0, c_1], l = self.pkl_at_index(0, subset_name, ordered=False)
                     contexts[batch_idx, 0, :, :] = c_0
                     contexts[batch_idx, 1, :, :] = c_1
+                    labels[batch_idx, l] = 1
+                    print("Testing 2 ones:::::::")
+                    #labels[batch_idx, 1] = 0
 
-        # print(pos_count,neg_count,order_neg_count)
+        print("count :",pos_count,neg_count,order_neg_count)
 
-        labels[labels == -1] = 0
-        labels_hot_vector = np.zeros((const.batch_size, 2))
-        labels_hot_vector[np.arange(const.batch_size), labels] = 1
+        # labels[labels == -1] = 0
+        # labels_hot_vector = np.zeros((const.batch_size, 2))
+        # labels_hot_vector[np.arange(const.batch_size), labels] = 1
 
+        
         if self._gen_nearby_frame:
-            return nearby, contexts, labels_hot_vector
+            return nearby, contexts, labels #, labels_hot_vector
         else:
-            return contexts, labels_hot_vector
+            return contexts ,labels #, labels_hot_vector
 
     def supervised_next(self, subset, fix_label=None):
         raise NotImplementedError()
@@ -302,9 +329,10 @@ if __name__ == '__main__':
 
     start_time = time.time()
     words, lbls = vdz_dataset.next(const.Subset.VAL, fix_label=-1, supervised=False)
+    # words, lbls,lb_T = vdz_dataset.next(const.Subset.VAL, fix_label=-1, supervised=False)
     elapsed_time = time.time() - start_time
     print(words.shape)
-    print(lbls)
+    print("Lables:::",lbls)
     print('elapsed_time :', elapsed_time)
     ## Some visualization for debugging purpose
     # save_imgs('tuple_',words,lbls,'_img');

@@ -102,11 +102,17 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    
+    # Uncomment for train and val
     ## Take one arg to indicate train or val. Train 0, Val 1
-    if (args.is_training):
-        current_subset = 0  ## Train
-    else:
-        current_subset = 1  ## Val
+    # if (args.is_training):
+    #     current_subset = 0  ## Train
+    # else:
+    #     current_subset = 1  ## Val
+    
+
+    # tHIS IS FOR TEST
+    current_subset = 2    
 
     if (current_subset == const.Subset.TRAIN.value):
         files_list = utils.txt_read(os.path.join(dataset_path + '_lists', 'trainlist.txt'))
@@ -122,6 +128,7 @@ if __name__ == '__main__':
         files_list = utils.txt_read(os.path.join(dataset_path + '_lists', 'testlist.txt'))
         print('*** Test has ', len(files_list))
         save_dir = os.path.join(save_dir, 'test')
+        max_num_tuplex = 100
 
     utils.touch_dir(save_dir)
     tuple_idx = 0
