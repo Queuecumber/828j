@@ -9,9 +9,28 @@ Given $(N+1)$ number of sub sequenced videos from one single video, N are in cor
 Further more the position of the odd element is randomized by shuffling sequence permutation.
 Thus the odd one out prediction task reduces to an $(N+1)$ way classification problem, which can be solved by maximum likelihood estimation. 
 
-The Model :  Multi Branch Convolutional neural Network consist of $(N+1)$ input branches. 
+The Model :  MultiBranch Convolutional neural Network consist of $(N+1)$ input branches. 
 Each contain 5 Convolutional layers. 
-The fusion layer -- merges the information from $(N+1)$ branches after the first fully connected layer. And helps to find regularities and pick the element with irregularities. 
-Two models are : 
-1. Concatenation Model 
-2. Sum of difference. 
+The fusion layer -- merges the information from $(N+1)$ branches after the first fully connected layer. And helps to find regularities and pick the element with irregularities. The two approaches are used are Concatenation Model and Sum of difference. Which is shown in figure fusionmodel.
+
+Video Frame Encoding: Each sub video is encoded to extract temporal information before presentation to the network. As we want the network to learn video representation by exploiting the structure of sequences. 
+
+A single RGB image wont have the information about the previous and next frames. For encoding the motion, they are using sum of difference, stack of difference and dynamic images.
+
+Sum of Difference : In this method they are taking the difference of frames and then summing the difference to obtain a single image. Here the single image captures the structure of the sequences. 
+It is similar to weighted average of frames.
+
+Dynamic Images: In this method they are pre processing the images before doing the sum of difference approach and obtain a smoothed sequence.
+It can be computed fast as a weighted linear combination of original frames.
+
+Stack of Difference: To capture the motion and dynamics of short video clips stack of difference of frames is taken. 
+
+
+\begin{figure}
+\centering
+\hspace{-3mm}
+\includegraphics[width=0.6\textwidth]{./Images/03n1.png}
+\caption{Concatenation Model and Sum of Difference Model}
+\label{fig:fusionmodel}
+\vspace{-4mm}
+\end{figure}
