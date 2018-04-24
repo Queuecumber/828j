@@ -334,6 +334,8 @@ class OddOneOutNet:
 
                 smooth_clips_embedding.append(smooth_clip_embedding);
 
+        self.embeddings = clips_embedding
+
         ## Sum of diff
 
         for i in range(num_clips):
@@ -348,7 +350,6 @@ class OddOneOutNet:
         with tf.variable_scope("O3N_FCN") as scope:
             unsupervised_fc7 = tf.layers.dense(inputs=self.sum_of_diff, units=128, name='F7_128',activation=tf.nn.relu);
             unsupervised_fc8 = tf.layers.dense(inputs=unsupervised_fc7, units=128, name='F8_128',activation=tf.nn.relu);
-            self.embedding = unsupervised_fc8
             unsupervised_logits = tf.layers.dense(inputs=unsupervised_fc8, units=num_clips, name='fc_prediction')
 
         with tf.variable_scope("O3N_loss") as scope:
