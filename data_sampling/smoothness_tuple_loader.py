@@ -71,7 +71,6 @@ class TupleLoader:
         # tmp_var = [2]
         # print('TMP Var:::',tmp_var)
         # for i in len(pkl_all):
-        print('New tuple')
         randomnum = randint(0,1)
         for i in range(tmp_var):
             pkl = pkl_all[i] 
@@ -81,9 +80,8 @@ class TupleLoader:
 
             rand_rgb_channel = np.random.choice(3);
             stack_diff = np.zeros((const.frame_height, const.frame_width, const.context_channels))
-            
-            
-            if ordered or i == randomnum:
+
+            if ordered or i == 1:
                 frames_order = np.arange(const.context_channels + 1)
             else:
                 frames_order = np.random.permutation(const.context_channels + 1)
@@ -96,8 +94,6 @@ class TupleLoader:
                 stack_diff[:, :, j] = current_frame.astype(np.int32) - next_frame.astype(np.int32);
 
             stacked_diff_all.append(stack_diff)
-            print("Current index:",i, "suffled index", 1 - randomnum)
-            print("frames_order",frames_order)
 
         # if(verbose):
         #     prefix = 'tuple_'
@@ -116,7 +112,7 @@ class TupleLoader:
         #     if(ordered == False):
         #         self.pkl_at_index(index,subset,ordered=True,batch_idx=batch_idx,lbl=lbl,verbose=True);
 
-        return stacked_diff_all, 1- randomnum
+        return stacked_diff_all
 
     def unsupervised_next(self, subset, fix_label=None):
         subset_name = ''
@@ -284,11 +280,40 @@ class TupleLoader:
     ## For example, you want a mini-batch size with all tuples below to 'horse riding' activity.
     ## supervised: indicate with the labels are Pos / Neg classification in case of unsupervised or Activity Label in case of supervised
 
-    def next(self, subset, fix_label=None, supervised=False):
+    def better_unsupervised_next(self, subset, num_clips):
+        if subset == const.Subset.TRAIN:
+            subset_size = self._num_training
+            subset_name = 'train'
+        elif subset == const.Subset.VAL:
+            subset_size = self._num_val
+            subset_name = 'val'
+
+        tuple_indices = np.random.randint(low=0, high=subset_size, size=(const.batch_size));
+
+        batch_data = []
+        batch_labels = []
+        for i in range(const.batch_size):
+            shuffle_index = randint(0, num_clips - 1)
+            clip_labels = np.zeros((num_clips))
+            clip_labels[shuffle_index] = 1
+
+            clip_data = []
+            for j in range(num_clips):
+                video_tuples = self.pkl_at_index(tuple_indices[i], subset_name, ordered=(j == shuffle_index))
+                clip_data.append(video_tuples)
+
+            batch_data.append(np.array(clip_data))
+            batch_labels.append(clip_labels)
+
+        return np.array(batch_data), np.array(batch_labels)
+
+    def next(self, subset, num_clips=4, fix_label=None, supervised=False):
         if (supervised):
             return self.supervised_next(subset, fix_label)
         else:
-            return self.unsupervised_next(subset, fix_label)
+            #return self.unsupervised_next(subset, fix_label)
+            return self.better_unsupervised_next(subset, num_clips)
+
 
 
 def save_pkls(prefix, context, lbls, suffix):
@@ -332,6 +357,7 @@ if __name__ == '__main__':
     # words, lbls,lb_T = vdz_dataset.next(const.Subset.VAL, fix_label=-1, supervised=False)
     elapsed_time = time.time() - start_time
     print(words.shape)
+    print(lbls.shape)
     print("Lables:::",lbls)
     print('elapsed_time :', elapsed_time)
     ## Some visualization for debugging purpose
