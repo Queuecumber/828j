@@ -51,20 +51,23 @@ Next we show the quantitative effect of LSH on the system speed and memory usage
 
 \subsection{Classification Accuracy Results}
 
-We also conduct a short quantitative study by using our weights as the initialization for AlexNet action recognition and fine-tuning the network. We follow the fine-tuning procedure in \cite{fernando2017self} for both the original O3N network and for our dual-loss architecture. The results are shown in \ref{fig:classres}, our networks weights give an improvement of TODO\%.
+We also conduct a short quantitative study by using our weights as the initialization for AlexNet action recognition and fine-tuning the network. We follow the fine-tuning procedure in \cite{fernando2017self} for both the original O3N network and for our dual-loss architecture. The results are shown in \ref{fig:classres}, our networks weights give an improvement of \todo\% over O3N initialization.
 
 We briefly review the fine-tuning procedure. We start with the standard AlexNet network. The convolutional layers are initialized with our weights, the fully connected layers, which now have 4096 activations, are initialized with random weights. The network is then trained for the action recognition task by using a $10^{-4}$ learning rate for the convolutional layers , which should already have reasonable weights according to our hypothesis. The fully-connected layers are trained with a $10^{-2}$ learning rate since they start with random weights. 
+
+We tested several different initialization to ensure a good comparison. For a baseline, we start from random weights and train with the $10^{-2}$ learning rate for all layers. For O3N and ours, we follow the fine tuning procedure described above. We also follow the fine-tuning procedure starting from ImageNet weights. This gives the best performance but it is worth noting that our method is only \todo\% worse while requiring no supervision.
 
 \begin{table}
     \centering
     \begin{tabu} to 0.5\textwidth {|X[l]|X[c]|}
         \hline
-        Method & Accuracy (\%) \\ \hline \hline
-        Random Initialization & TODO \\ \hline
+        Initialization & Accuracy (\%) \\ \hline \hline
+        Random & \todo \\ \hline
+        ImageNet & \textbf{70.8} \\ \hline
         O3N Initialization & 65.3 \\ \hline
-        \textbf{Ours} & TODO \\ \hline
+        Ours & \todo \\ \hline
     \end{tabu}
-    \caption{Fine-tuned classification accuracy, random weights vs O3N weights vs our weights}
+    \caption{Fine-tuned classification accuracy for different weight initializations.}
     \label{fig:classres}
 \end{table}
 
