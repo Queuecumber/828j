@@ -2,21 +2,24 @@
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/hashing_time_results.png}
-    \caption{Hashing query time as a function of basis size. $l_2$ speed plotting in red for comparison. Note that even with 4096 bits, LSH search is significantly faster.}
-    \label{fig:speedres}
+    \begin{subfigure}[b]{0.23\textwidth}
+        \includegraphics[width=\textwidth]{images/hashing_time_results.png}
+        \caption{Hashing query time as a function of basis size. $l_2$ speed plotting in red for comparison. Note that even with 4096 bits, LSH search is significantly faster.}
+        \label{fig:gull}
+    \end{subfigure} 
+    ~
+    \begin{subfigure}[b]{0.23\textwidth}
+        \includegraphics[width=\textwidth]{images/hashing_memory_results.png}
+        \caption{Total database size as a function of basis size. Size of the database using the embedding space directly plotted in red for comparison. Again, LSH uses significantly less resources.}
+        \label{fig:tiger}
+    \end{subfigure}
+    \caption{LSH Quantitative Results}
+    \label{fig:lshres}
 \end{figure}
 
 We provide an empirical study of our method using two approaches. First we test our primary task of video retrieval. Then, we show how the weights learned by our model provide a good initialization for the action recognition task.
 
 \subsection{Retrieval Results}
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/hashing_memory_results.png}
-    \caption{Total database size as a function of basis size. Size of the database using the embedding space directly plotted in red for comparison. Again, LSH uses significantly less resources.}
-    \label{fig:memres}
-\end{figure}
 
 We test several aspects of the video retrieval task. In all tests, we take the UCF101 training set to be our database and select a single probe video from the UCF101 test set. The videos are projected into the 128 dimensional space formed by taking the fc6 output of four six-frame stack of differences distributed uniformly at random through the video. The 128 dimensional representation for each stack of difference is averaged to give the 128 dimensional representation for each video. Our system then returns the top $n$ videos for the given probe image. We tested with $n=5$ but for brevity, only the top match is shown in the qualitative results.
 
@@ -47,7 +50,7 @@ Figure \ref{fig:retres} shows qualitative results of our method. Three represent
     \end{center}
 \end{figure*}
 
-Next we show the quantitative effect of LSH on the system speed and memory usage in Figures \ref{fig:speedres} and \ref{fig:memres}. For these results, the same set of LSH bases, 16, 32, 64, 128, and 4096, are used. The time to retrieve the top $n=5$ videos is computed and the total storage size of the database is reported. As the results show, LSH even with a basis size of 4096 has a significant impact on the speed of retrieval and on the size of the database. Cross referencing with Figure \ref{fig:retres}, this cost efficiency comes with minimal cost in the accuracy of the retrieval results. Even at a basis size of 4096 bits, the LSH database takes up approximately one third less memory than the original database and executes queries approximately four times as quickly.
+Next we show the quantitative effect of LSH on the system speed and memory usage in Figures \ref{fig:lshres} and \ref{fig:lshres}. For these results, the same set of LSH bases, 16, 32, 64, 128, and 4096, are used. The time to retrieve the top $n=5$ videos is computed and the total storage size of the database is reported. As the results show, LSH even with a basis size of 4096 has a significant impact on the speed of retrieval and on the size of the database. Cross referencing with Figure \ref{fig:retres}, this cost efficiency comes with minimal cost in the accuracy of the retrieval results. Even at a basis size of 4096 bits, the LSH database takes up approximately one third less memory than the original database and executes queries approximately four times as quickly.
 
 \subsection{Classification Accuracy Results}
 
