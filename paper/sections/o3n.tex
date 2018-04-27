@@ -1,12 +1,12 @@
 \section{Odd One Out Learning}
 
 Odd-one-out uses temporal ordering for representation learning in self supervised way.
-This networks is a new way to learn visual features for videos without using category level annotations.This method is applied to self supervised video representation learning where they sample sub sequences from videos and ask the network to learn to predict the odd video sequence.Here the odd video sub sequence is sampled such that it has wrong temporal order of frames while the even ones have the correct temporal order. 
+This network is a new way to learn visual features for videos without using category level annotations. This method is applied to self supervised video representation learning where they sample sub sequences from videos and ask the network to learn to predict the odd video sequence. Here the odd video sub sequence is sampled such that it has wrong temporal order of frames while the even ones have the correct temporal order. 
 They transfer weights to action recognition and fine tune on supervised set and show improvement over fully supervised learning.
 
-Given $(N+1)$ number of sub sequenced videos from one single video, N are in correct chronological order of frames which is the even set. The odd set consist of frame sampled from invalid sub sequenced video. One out of $(N+1)$ element is odd object.
+Given $(N+1)$ number of sub sequenced videos from one single video, $N$ are in correct chronological order of frames which is the even set. The odd set consist of frame sampled from invalid sub sequenced video. One out of $(N+1)$ elements is odd object.
 
-Further more the position of the odd element is randomized by shuffling sequence permutation.
+Furthermore the position of the odd element is randomized by shuffling sequence permutation.
 Thus the odd one out prediction task reduces to an $(N+1)$ way classification problem, which can be solved by maximum likelihood estimation. 
 
 The Model :  MultiBranch Convolutional neural Network consist of $(N+1)$ input branches. 

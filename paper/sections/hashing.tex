@@ -9,7 +9,7 @@ Generally, this is a slow computation. Note that for a single comparison,
 \end{equation} 
 Being optimistic and ignoring the square root, this requires 256 additions and 128 multiplies per video in the database, after which $N$ comparisons must be made for a database of size $N$. This does not scale well to large databases.
 
-There are several potential solutions to this which all reduce to a dimensionality reduction. We choose a highly efficient method: Locality Sensitive Hashing (LSH). Most hash functions, such as those used in cryptography or for $O(1)$ storage mechanisms, try to distribute their results evenly in the output space. For example, a cryptographically secure hash should result in a distribution of the output bits that appears random to an observer with no knowledge of the input. For a LSH, the goal is the opposite. Inputs should preserve the ordering of their distances when projected into the hashed space. Formally, given three points in some space $x_0, x_1, x_2$ such that 
+There are several potential solutions to this which all amount to a dimensionality reduction. We choose a highly efficient method: Locality Sensitive Hashing (LSH). Most hash functions, such as those used in cryptography or for $O(1)$ storage mechanisms, try to distribute their results evenly in the output space. For example, a cryptographically secure hash should result in a distribution of the output bits that appears random to an observer with no knowledge of the input. For a LSH, the goal is the opposite. Inputs should preserve the ordering of their distances when projected into the hashed space. Formally, given three points in some space $x_0, x_1, x_2$ such that 
 
 \begin{equation}
 |x_0 - x_1|_2 > |x_0 - x_2|_2
@@ -17,10 +17,11 @@ There are several potential solutions to this which all reduce to a dimensionali
 we desire
 
 \begin{equation}
-|H(x_0) - H(x_1)|_2 > |H(x_0) - H(x_2)|_2
+d(H(x_0), H(x_1)) > d(H(x_0) - H(x_2))
 \end{equation}
+for some distance function $d()$ defined suitably in the hash space.
 
-We choose the Random Projects, or SimHash \cite{charikar2002similarity}, algorithm for this purpose. The Random Projections algorithm defines $k$ random hyperplanes in the space of the original points. For each point $x$, the hash function $H(x)$ computes
+We choose the Random Projections, or SimHash \cite{charikar2002similarity}, algorithm for this purpose. The Random Projections algorithm defines $k$ random hyperplanes in the space of the original points. For each point $x$, the hash function $H(x)$ computes
 
 \begin{align}
     p_i = \text{sign}(k_i \cdot x) \\
@@ -33,15 +34,17 @@ Such that each of the $p_i$ are encoded as a single bit. In this way, the functi
     \centering
     \begin{subfigure}[t]{0.24\textwidth}
             \includegraphics[width=\textwidth]{images/lsh_planes.png}
-            \caption{Hyperplanes and points in 2D space.}      
+            \caption{Hyperplanes and points in 2D space.}   
+            \label{fig:lshplanes}   
     \end{subfigure} 
     \begin{subfigure}[t]{0.24\textwidth}
             \includegraphics[width=\textwidth]{images/lsh_distance.png}
             \caption{Hamming distance from red point to all other points. Nearest neighbor in hamming space is highlighted in orange.}
+            \label{fig:lshdist}
     \end{subfigure}
     \caption{Illustration of the Random Projections algorithm.}
     \label{fig:lsh}
 \end{figure}
 
-The number of hyperplanes $k$ is a tunable parameter. In general, a higher $k$ gives more accurate distances for a slower distance computation. Figure \ref{fig:lsh} Top shows a set of 16 hyperplanes that could be used to encode the set of 2D points. Figure 1 Bottom ranks the points based on their distance from the red point, with the nearest neighbor in hamming space highlighted in orange. Examining Figure \ref{fig:lsh} Top gives some intuition about why the Random Projections algorithm works: as the number of planes goes to infinity, the distance metric approaches the cosine distance between the points. This intuitive result is proven by Charikar \cite{charikar2002similarity}.
+The number of hyperplanes $k$ is a tunable parameter. In general, a higher $k$ gives more accurate distances for a slower distance computation. Figure \ref{fig:lshplanes} shows a set of 16 hyperplanes that could be used to encode the set of 2D points. Figure \ref{fig:lshdist} ranks the points based on their distance from the red point, with the nearest neighbor in hamming space highlighted in orange. Examining Figure \ref{fig:lshplanes} gives some intuition about why the Random Projections algorithm works: as the number of planes goes to infinity, the distance metric approaches the cosine distance between the points. This intuitive result is proven by Charikar \cite{charikar2002similarity}.
 
