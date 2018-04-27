@@ -30,9 +30,16 @@ We choose the Random Projects, or SimHash \cite{charikar2002similarity}, algorit
 Such that each of the $p_i$ are encoded as a single bit. In this way, the function $H(x)$ defines a $k$-bit Hamming space \cite{hamming1950error}. The $k$ hyperplanes should be uniformly distributed in the input space. Using this algorithm allows us to use the Hamming distance function, which is extremely fast to compute using bitwise operations \cite{cohen1997covering}.
 
 \begin{figure}[h]
-    \includegraphics[width=0.5\textwidth]{images/lsh_planes.png}
-    \includegraphics[width=0.5\textwidth]{images/lsh_distance.png}
-    \caption{Top: Hyperplanes and points in 2D space, Bottom: Hamming distance from red point to all other points. Nearest neighbor in hamming space is highlighted in orange.}
+    \centering
+    \begin{subfigure}[t]{0.24\textwidth}
+            \includegraphics[width=\textwidth]{images/lsh_planes.png}
+            \caption{Hyperplanes and points in 2D space.}      
+    \end{subfigure} 
+    \begin{subfigure}[t]{0.24\textwidth}
+            \includegraphics[width=\textwidth]{images/lsh_distance.png}
+            \caption{Hamming distance from red point to all other points. Nearest neighbor in hamming space is highlighted in orange.}
+    \end{subfigure}
+    \caption{Illustration of the Random Projections algorithm.}
     \label{fig:lsh}
 \end{figure}
 
