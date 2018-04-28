@@ -18,7 +18,7 @@ For each odd-one-out network, only one clip is out of order, such as either $c_0
 This network architecture makes it possible to consider out-of-order loss $\lagr_{O3N}$ and temporal smoothness loss $\lagr_T$ at the same time. 
 Both losses have been discussed in previous sections, and can be combined as loss for the proposed network:
 \begin{equation}
-\lagr = \lagr_{O3N} + \gamma \lagr_T    
+\lagr = \lagr_{O} + \gamma \lagr_T    
 \end{equation}
 
 where hyperparameter $\gamma$ captures the priority between the two losses. 
