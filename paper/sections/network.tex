@@ -1,5 +1,12 @@
 \section{Network}\label{sec:network}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.35\textwidth]{images/network.png}
+    \caption{Network architecture.}
+    \label{fig:network}
+\end{figure}
+
 Our network architecture contains two copies of the odd-one-out network in order to learn both temporal order and smoothness at the same time. 
 The input frames are sampled from sequenced videos with $N+1$ input clips for each odd-one-out network.
 As mentioned in the previous section, only one out of the $N+1$ clips is out of order. 
@@ -16,10 +23,3 @@ Both losses have been discussed in previous sections, and can be combined as los
 
 where hyperparameter $\gamma$ captures the priority between the two losses. 
 This paper is the first attempt to combine odd-one-out learning with temporal cohence, and a non-trivial choice of $\gamma$ provides insights to the effectiveness of this learning strategy.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.35\textwidth]{images/network.png}
-\caption{Network architecture.}
-\label{fig:network}
-\end{figure}

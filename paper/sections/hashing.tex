@@ -1,5 +1,21 @@
 \section{Locality Sensitive Hashing}\label{sec:hashing}
 
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{images/lsh_planes.png}
+        \caption{Hyperplanes and points in 2D space.}   
+        \label{fig:lshplanes}   
+    \end{subfigure} 
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{images/lsh_distance.png}
+        \caption{Hamming distance from red point to all other points. Nearest neighbor in hamming space is highlighted in orange.}
+        \label{fig:lshdist}
+    \end{subfigure}
+    \caption{Illustration of the Random Projections algorithm.}
+    \label{fig:lsh}
+\end{figure}
+
 The embedding defined by our joint network architecture is a high dimensional space. Taking the last fully-connected layer of the tuple branches to be the embedding for a tuple gives a point in a 128 dimensional space. The naive retrieval algorithm would then project all videos in the database into this space, then for each probe, project it into the same space and execute a nearest neighbor search. The search would return video ranked by their $l_2$ distance in the 128 dimensional space.
 
 Generally, this is a slow computation. Note that for a single comparison, 
@@ -30,21 +46,6 @@ We choose the Random Projections, or SimHash \cite{charikar2002similarity}, algo
 
 Such that each of the $p_i$ are encoded as a single bit. In this way, the function $H(x)$ defines a $k$-bit Hamming space \cite{hamming1950error}. The $k$ hyperplanes should be uniformly distributed in the input space. Using this algorithm allows us to use the Hamming distance function, which is extremely fast to compute using bitwise operations \cite{cohen1997covering}.
 
-\begin{figure}[h]
-    \centering
-    \begin{subfigure}[t]{0.24\textwidth}
-            \includegraphics[width=\textwidth]{images/lsh_planes.png}
-            \caption{Hyperplanes and points in 2D space.}   
-            \label{fig:lshplanes}   
-    \end{subfigure} 
-    \begin{subfigure}[t]{0.24\textwidth}
-            \includegraphics[width=\textwidth]{images/lsh_distance.png}
-            \caption{Hamming distance from red point to all other points. Nearest neighbor in hamming space is highlighted in orange.}
-            \label{fig:lshdist}
-    \end{subfigure}
-    \caption{Illustration of the Random Projections algorithm.}
-    \label{fig:lsh}
-\end{figure}
 
 The number of hyperplanes $k$ is a tunable parameter. In general, a higher $k$ gives more accurate distances for a slower distance computation. Figure \ref{fig:lshplanes} shows a set of 16 hyperplanes that could be used to encode the set of 2D points. Figure \ref{fig:lshdist} ranks the points based on their distance from the red point, with the nearest neighbor in hamming space highlighted in orange. Examining Figure \ref{fig:lshplanes} gives some intuition about why the Random Projections algorithm works: as the number of planes goes to infinity, the distance metric approaches the cosine distance between the points. This intuitive result is proven by Charikar \cite{charikar2002similarity}.
 
