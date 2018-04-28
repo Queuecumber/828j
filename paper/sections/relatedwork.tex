@@ -1,1 +1,22 @@
 \section{Related Work}\label{sec:related}
+Vast amount of video stored in web archives makes their retrieval based on manual text annotations impractical.
+Unsupervised methods provide an edge for videos in terms of action classification, detection and retrieval as manual annotations is not required. 
+For retrieval of videos in an unsupervised method we need to exploit the data to find similar semantic and visual properties.
+
+Most of the traditional techniques uses hand crafted features such as Histogram of Oriented Gradients (HOG),Histogram of Optical Flow (HOF), Motion Boundary Histogram
+(MBH) around spatio-temporal interest points \cite{Laptev08learningrealistic} or in dense grid to learn features or around dense point trajectories obtained through optical flow based tracking to learn the feature vectors. 
+
+For video retrieval and self supervised learning of the features the direction of time-flow (forward or backward) in videos was studied \cite{Pickupetal14}. CNNs are used to explore the power of learning
+slow features, also referred to as “temporally coherent” features\cite{Mobahi2009}
+The approach\cite{podlesnaya2016retrieval} does video indexing and retrieval using convulational neural network  based on unified semantic features.
+
+CNN-based unsupervised representation learning method \cite{Misra2016ShuffleAL}where the learning task is to verify whether a sequence
+of frames from a video is presented in the correct order or
+not.The method does not learn to encode temporal
+information but only spatial. In contrast \cite{fernando2017self}
+exploits the analogical reasoning over sequences and pose
+the feature learning problem as a  $ N + 1 $ way multi class
+classification problem which is much harder than the binary
+verification problem .
+
+In this paper the methods specified in odd-one-out \cite{fernando2017self} with temporal smoothness is combines to learn features for video retrieval.
