@@ -2,7 +2,7 @@
 
 Besides the odd-one-out question, temporal smoothness can be exploited to learn high-level concepts from unlabeled video.
 This is motivated by dimensionality reduction, which aims to translate high dimensional data to a low dimensional representation such that similar input objects are mapped to nearby points in feature space. 
-In this this section, we first provide a brief review of a temporal smoothness prior work that is first used in a dimensionality reduction algorithm called Dimensionality Reduction by Learning an Invariant Mapping (DrLIM)\cite{LeCun2006DrLIM}. Then we present several improvements on the prior work and fit it in our problem. 
+In this this section, we first provide a brief review of a temporal smoothness prior work that is first used in a dimensionality reduction algorithm called Dimensionality Reduction by Learning an Invariant Mapping (DrLIM)\cite{hadsell2006dimensionality}. Then we present several improvements on the prior work and fit it in our problem. 
 
 Consider a set of input vectors $I = \{x_1, ..., x_p\}$ and a parametric function $G_W$ returns extracted features. 
 For each $x_i \in I$ there exist a subset of vectors in $I$ that are deemed as similar to $x_i$.  
@@ -52,12 +52,12 @@ The margin $m$ is introduced to avoid the degenerate solution $G_W(x_t) = G_W(x_
 Specifically, this margin term encourages data samples that are not temporal neighbors to be separated by at least a distance of $m$-units in feature space. 
 
 However, the second contrastive term in loss $\lagr_T(x_t, x_t\rq{}, W)$ only depends on pairwise distances in the feature space, and hence does not guarantee that the resulting feature space is informative with respect to the input. 
-One improvement is to replace this contrastive term with a term that penalizes the reconstruction error of both data samples \cite{LeCun2014coherence}. 
+One improvement is to replace this contrastive term with a term that penalizes the reconstruction error of both data samples \cite{goroshin2015unsupervised}. 
 This reconstruction term not only prevents the constant solution but also acts to explicitly preserve information about the input.
 
 Another improvement is to extract temporal slow features by applying pooling operators in feature space. 
 In natural video and on small spatial scales these features mainly correspond to local translations and deformations. 
-Invariances to such changes can be achieved using appropriate pooling operators \cite{Mallat2013scattering}.
+Invariances to such changes can be achieved using appropriate pooling operators \cite{sifre2013rotation}.
 We divide each feature vector into $K$ potentially overlapping neighborhoods and denote each of them as $P_i$. 
 Specifically, we apply $l_2$-Pooling and the loss discussed above can be expressed as following:
 \begin{equation}
