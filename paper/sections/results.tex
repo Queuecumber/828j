@@ -14,7 +14,7 @@
     \label{fig:lshres}
 \end{figure}
 
-We provide an empirical study of our method using two approaches. First we test our primary task of video retrieval. Then, we show how the weights learned by our model provide a good initialization for the action recognition task.
+We provide an empirical study of our method using two approaches. First we test our primary task of video retrieval. This is primarily a qualitative evaluation. We show how the weights learned by our model provide a good initialization for the action recognition task with a quantitative evaluation.
 
 \subsection{Retrieval Results}
 
@@ -51,21 +51,20 @@ Next we show the quantitative effect of LSH on the system speed and memory usage
 
 \subsection{Classification Accuracy Results}
 
-We also conduct a short quantitative study by using our weights as the initialization for action recognition and fine-tuning. We follow the fine-tuning procedure in \cite{fernando2017self} for both the original O3N network and for our dual-loss architecture. The results are shown in \ref{fig:classres}, our networks weights give an improvement of \todo\% over O3N initialization.
+We also conduct a short quantitative study by using our weights as the initialization for action recognition and fine-tuning. We follow the fine-tuning procedure in \cite{fernando2017self} for both the original O3N network and for our dual-loss architecture. The results are shown in \ref{fig:classres}, our networks weights give an improvement of around 2\% over O3N initialization.
 
 We briefly review the fine-tuning procedure. We start with the standard AlexNet network. The convolutional layers are initialized with our weights. The fully connected layers, which now have 4096 activations, are initialized with random weights. The network is then trained for the action recognition task by using a $10^{-4}$ learning rate for the convolutional layers , which should already have reasonable weights according to our hypothesis. The fully-connected layers are trained with a $10^{-2}$ learning rate since they start with random weights. 
 
-We tested several different initialization to ensure a good comparison. For a baseline, we start from random weights and train with the $10^{-2}$ learning rate for all layers. For O3N and ours, we follow the fine tuning procedure described above. We also follow the fine-tuning procedure starting from ImageNet weights. This gives the best performance but it is worth noting that our method is only \todo\% worse while requiring no supervision.
+We tested multiple different initializations to ensure a good comparison. We follow the fine-tuning procedure described above starting from ImageNet supervised weights, O3N alone, and ours (O3N with temporal smoothness). Adding the smoothness loss gives increased accuracy over using O3N alone. As expected, the ImageNet weights perform better than both of the self-supervised weights. It is worth noting that producing ImageNet weights is very expensive: it requires a much longer training process and requires labeled data. 
 
 \begin{table}
     \centering
     \begin{tabu} to 0.5\textwidth {|X[l]|X[c]|}
         \hline
         Initialization & Accuracy (\%) \\ \hline \hline
-        Random & \todo \\ \hline
         ImageNet & \textbf{70.8} \\ \hline
-        O3N Initialization & 65.3 \\ \hline
-        Ours & \todo \\ \hline
+        O3N & 52.756 \\ \hline
+        Ours (O3N + TS) & 54.072 \\ \hline
     \end{tabu}
     \caption{Fine-tuned classification accuracy for different weight initializations.}
     \label{fig:classres}
