@@ -54,7 +54,7 @@ Figure \ref{fig:retres} shows qualitative results of our method. Three represent
     \end{center}
 \end{figure*}
 
-Next we compare the retrieval using O3N features to ours. The results are shown in Figure \ref{fig:retcomp}. We use the same procedure to produce these results as described in the first paragraph of this section, only changing the network architecture between O3N (Section \ref{sec:o3n}) and Ours (O3N with Temporal Smoothness, Section \ref{sec:network}). The top four retrieval results are given for the same "Cliff Diving" probe that was used in Figure \ref{fig:retres}. The results show that while the O3N can capture the motion type, our method does so more effectively and can even preserve the action class. While none of the O3N results are from the "Cliff Diving" class, three out of the four are in the "Cliff Diving" class for our network. Further, the second result is from the "Still Rings" class, which contains similar acrobatic movements to the "Cliff Diving" videos.
+Next we compare the retrieval using O3N features to ours. The results are shown in Figure \ref{fig:retcomp}. We use the same procedure to produce these results as described in the first paragraph of this section, only changing the network architecture between O3N (Section \ref{sec:o3n}) and Ours (O3N with Temporal Smoothness, Section \ref{sec:network}). The top five retrieval results are given for the same "Cliff Diving" probe that was used in Figure \ref{fig:retres}. The results show that while the O3N can capture the motion type, our method does so more effectively and can even preserve the action class. While none of the O3N results are from the "Cliff Diving" class, three out of the five are in the "Cliff Diving" class for our network. Further, the second result is from the "Still Rings" class, which contains similar acrobatic movements to the "Cliff Diving" videos. More O3N retrieval results are included in the supplementary material.
 
 Finally, we show the quantitative effect of LSH on the system speed and memory usage in Figure \ref{fig:lshres}. For these results, the same set of LSH bases, 16, 32, 64, 128, and 4096, are used. The time to retrieve the top $n=5$ videos is computed and the total storage size of the database is reported. As the results show, LSH even with a basis size of 4096 has a significant impact on the speed of retrieval and on the size of the database. Cross referencing with Figure \ref{fig:retres}, this added efficiency comes with minimal cost in the accuracy of the retrieval results. Even at a basis size of 4096 bits, the LSH database takes up approximately one third less memory than the original database and executes queries approximately four times as quickly.
 
@@ -81,21 +81,23 @@ We tested multiple different initializations to ensure a good comparison. We fol
 
 \begin{figure*}[t]
     \centering
-        \begin{tabu} to \textwidth {|X[c,m]|X[c,m]X[c,m]X[c,m]X[c,m]|}
+        \begin{tabu} to \textwidth {|X[c,m]|X[c,m]X[c,m]X[c,m]X[c,m]X[c,m]|}
             \hline
-            Method & 0 & 1 & 2 & 3 \\ \hline \hline
+            Method & 0 & 1 & 2 & 3 & 4 \\ \hline \hline
             O3N & 
             \includegraphics[width=0.1\textwidth]{images/o3vsmooth/o3/0.png}\vspace{2mm} & % vspace for presentation (otherwise images are clumpted together)
             \includegraphics[width=0.1\textwidth]{images/o3vsmooth/o3/1.png}\vspace{2mm} &
             \includegraphics[width=0.1\textwidth]{images/o3vsmooth/o3/2.png}\vspace{2mm} & 
-            \includegraphics[width=0.1\textwidth]{images/o3vsmooth/o3/3.png}\vspace{2mm} \\
+            \includegraphics[width=0.1\textwidth]{images/o3vsmooth/o3/3.png}\vspace{2mm} &
+            \includegraphics[width=0.1\textwidth]{images/o3vsmooth/o3/4.png}\vspace{2mm} \\
             Ours (O3N + TS) & 
             \includegraphics[width=0.1\textwidth]{images/o3vsmooth/smooth/0.png} &
             \includegraphics[width=0.1\textwidth]{images/o3vsmooth/smooth/1.png} &
             \includegraphics[width=0.1\textwidth]{images/o3vsmooth/smooth/2.png} & 
-            \includegraphics[width=0.1\textwidth]{images/o3vsmooth/smooth/3.png} \\ \hline            
+            \includegraphics[width=0.1\textwidth]{images/o3vsmooth/smooth/3.png} &
+            \includegraphics[width=0.1\textwidth]{images/o3vsmooth/smooth/4.png}\\ \hline            
         \end{tabu}
-        \caption{Qualitative Comparison, O3N vs Ours. The top four retrieval results for the same probe video for the "Cliff Diving" class in Figure \ref{fig:retres} are shown. Our method captures motion type more effectively and can preserve action class.}
+        \caption{Qualitative comparison, O3N vs Ours. The top five retrieval results for the same probe video for the "Cliff Diving" class in Figure \ref{fig:retres} are shown. Our method captures motion type more effectively and can preserve action class.}
         \label{fig:retcomp}
 \end{figure*}
 
