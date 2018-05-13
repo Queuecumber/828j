@@ -54,6 +54,32 @@ Figure \ref{fig:retres} shows qualitative results of our method. Three represent
     \end{center}
 \end{figure*}
 
+
+
+\begin{figure*}[t]
+    \centering
+        \begin{tabu} to \textwidth {|X[c,m]|X[c,m]X[c,m]X[c,m]X[c,m]X[c,m]|}
+            \hline
+            Class & Biking & CliffDiving & Knitting & PizzaTossing & SkateBoarding \\ \hline \hline
+            Misclassified & 
+            \includegraphics[width=0.1\textwidth]{images/rep/F_10.png}\vspace{2mm} & % vspace for presentation (otherwise images are clumpted together)
+            \includegraphics[width=0.1\textwidth]{images/rep/F_21.png}\vspace{2mm} &
+            \includegraphics[width=0.1\textwidth]{images/rep/F_49.png}\vspace{2mm} & 
+            \includegraphics[width=0.1\textwidth]{images/rep/F_57.png}\vspace{2mm} &
+            \includegraphics[width=0.1\textwidth]{images/rep/F_79.png}\vspace{2mm} \\
+            Correct & 
+            \includegraphics[width=0.1\textwidth]{images/rep/R_10.png} &
+            \includegraphics[width=0.1\textwidth]{images/rep/R_21.png} &
+            \includegraphics[width=0.1\textwidth]{images/rep/R_49.png} & 
+            \includegraphics[width=0.1\textwidth]{images/rep/R_57.png} &
+            \includegraphics[width=0.1\textwidth]{images/rep/R_79.png}\\ \hline            
+        \end{tabu}
+        \caption{Example videos that are correctly or misclassified.}
+        \label{fig:classexamples}
+\end{figure*}
+
+
+
 Next we compare the retrieval using O3N features to ours. The results are shown in Figure \ref{fig:retcomp}. We use the same procedure to produce these results as described in the first paragraph of this section, only changing the network architecture between O3N (Section \ref{sec:o3n}) and Ours (O3N with Temporal Smoothness, Section \ref{sec:network}). The top five retrieval results are given for the same "Cliff Diving" probe that was used in Figure \ref{fig:retres}. The results show that while the O3N can capture the motion type, our method does so more effectively and can even preserve the action class. While none of the O3N results are from the "Cliff Diving" class, three out of the five are in the "Cliff Diving" class for our network. Further, the second result is from the "Still Rings" class, which contains similar acrobatic movements to the "Cliff Diving" videos. More O3N retrieval results are included in the supplementary material.
 
 Finally, we show the quantitative effect of LSH on the system speed and memory usage in Figure \ref{fig:lshres}. For these results, the same set of LSH bases, 16, 32, 64, 128, and 4096, are used. The time to retrieve the top $n=5$ videos is computed and the total storage size of the database is reported. As the results show, LSH even with a basis size of 4096 has a significant impact on the speed of retrieval and on the size of the database. Cross referencing with Figure \ref{fig:retres}, this added efficiency comes with minimal cost in the accuracy of the retrieval results. Even at a basis size of 4096 bits, the LSH database takes up approximately one third less memory than the original database and executes queries approximately four times as quickly.
@@ -79,6 +105,8 @@ We briefly review the fine-tuning procedure. We start with the standard AlexNet 
 
 We tested multiple different initializations to ensure a good comparison. We follow the fine-tuning procedure described above starting from ImageNet supervised weights, O3N alone, and ours (O3N with temporal smoothness). Adding the smoothness loss gives increased accuracy over using O3N alone. As expected, the ImageNet weights perform better than both of the self-supervised weights. It is worth noting that producing ImageNet weights is very expensive: it requires a much longer training process and requires labeled data. 
 
+%XS: I temporarily comment this because both o3/4.png and smooth/4.png do not exit
+\iffalse
 \begin{figure*}[t]
     \centering
         \begin{tabu} to \textwidth {|X[c,m]|X[c,m]X[c,m]X[c,m]X[c,m]X[c,m]|}
@@ -100,5 +128,5 @@ We tested multiple different initializations to ensure a good comparison. We fol
         \caption{Qualitative comparison, O3N vs Ours. The top five retrieval results for the same probe video for the "Cliff Diving" class in Figure \ref{fig:retres} are shown. Our method captures motion type more effectively and can preserve action class.}
         \label{fig:retcomp}
 \end{figure*}
-
+\fi
 
